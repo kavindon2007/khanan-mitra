@@ -4,3 +4,4 @@
 
 https://github.com/user-attachments/assets/ec38ddc8-87f3-4053-8a12-0e32b2b27275
 
+<img width="480" height="216" alt="WhatsApp_GIF_2026-09-23_at_14 45 23_20260923150305" src="https://github.com/user-attachments/assets/885c012b-e458-4489-9aa1-e1834f91b742" />

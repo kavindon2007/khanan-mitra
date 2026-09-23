@@ -1,5 +1,8 @@
+import logging
+
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -11,6 +14,8 @@ from app.routers import (
     auth, dashboard, workers, completions,
     analytics, devices, audit, verify
 )
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Khanan Mitra API",
@@ -30,11 +35,19 @@ app.add_middleware(
 
 @app.get("/health/db")
 def database_health(db: Session = Depends(get_db)):
-    result = db.execute(text("SELECT 1"))
-    return {
-        "database": "connected",
-        "result": result.scalar()
-    }
+    try:
+        result = db.execute(text("SELECT 1"))
+        return {
+            "database": "connected",
+            "result": result.scalar()
+        }
+    except Exception:
+        # Log the full traceback to Render logs — no credentials are logged here.
+        logger.exception("Database health check failed")
+        return JSONResponse(
+            status_code=503,
+            content={"database": "unavailable", "detail": "Database connection failed. Check server logs."},
+        )
 
 # Register routers
 app.include_router(auth.router)
